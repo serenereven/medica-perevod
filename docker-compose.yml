@@ -26,8 +26,9 @@ services:
       - "80:80"
       - "443:443"
     volumes:
-      - ./nginx/templates:/etc/nginx/templates:ro
+      - ./nginx/custom_templates:/opt/nginx-templates:ro
       - ./nginx/generate.sh:/docker-entrypoint.d/99-generate.sh:ro
+      # - ./nginx/templates:/etc/nginx/templates:ro
       - ./staticfiles:/staticfiles:ro
       - ./media:/media:ro
       - certbot_www:/var/www/certbot:ro
