@@ -2,7 +2,7 @@ services:
   web:
     build: .
     container_name: ${PROJECT_NAME:-medica}_web
-    command: /app/scripts/entrypoint.sh
+    # command: /app/scripts/entrypoint.sh
     env_file:
       - .env
     restart: always
