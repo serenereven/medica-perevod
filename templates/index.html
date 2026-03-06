@@ -1,0 +1,25 @@
+{% extends "base.html" %}
+{% load static %}
+{% block content %}
+
+<!-- HERO-БЛОК -->
+<section class="uk-section uk-section-primary uk-light hero-section">
+    <div class="uk-container" uk-scrollspy="cls: uk-animation-fade; delay: 60; repeat: false">  
+        <h1 class="hero-title uk-margin-small-bottom">
+            Новый дивный сайт
+        </h1>
+
+        <h2 class="uk-text-lead uk-margin-medium-top">
+            Главная страница
+        </h2>
+
+        <div class="uk-margin-medium-top">
+            <a href="#feedback-modal"
+                class="uk-button uk-button-large uk-button-secondary uk-margin-small-bottom  uk-margin-small-right"
+                uk-scroll>
+                Оставить заявку
+            </a>
+        </div>
+    </div>
+</section>
+{% endblock %}

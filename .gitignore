@@ -1,0 +1,47 @@
+/db.sqlite3
+/medica.code-workspace
+/venv
+
+# Python
+__pycache__/
+*.py[cod]
+*.so
+*.egg-info/
+dist/
+build/
+
+# Virtualenv / env
+venv/
+.venv/
+.env
+.env.*.local
+!.env.example
+
+# Django
+*.log
+*.sqlite3
+media/
+staticfiles/
+
+# Tooling
+.pytest_cache/
+.mypy_cache/
+.ruff_cache/
+.coverage
+htmlcov/
+
+# OS
+.DS_Store
+Thumbs.db
+
+# IDE
+*.code-workspace
+.vscode/
+.idea/
+
+# Misc
+nginx/conf.d/app.conf
+letsencrypt/
+certbot_www/
+
+todo.md

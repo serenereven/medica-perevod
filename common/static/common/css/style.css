@@ -1,0 +1,695 @@
+ /*  Переменные  */
+  :root {
+   --teal:         #31dae7;
+   --teal-dark:    #0189a1;
+   --teal-pale:    #dff1f3;
+   --teal-border:  #b5dde1;
+   --nav-text:     #2d4a5a;
+   --body-text:    #3a4a55;
+   --muted:        #8aa0aa;
+   --white:        #ffffff;
+   --bg-page:      #f4f8f9;
+   --bg-row-alt:   #f8fbfc;
+   --border:       #d5e5e8;
+   --shadow-sm:    0 2px 8px rgba(58,157,168,.08);
+   --shadow-md:    0 5px 18px rgba(58,157,168,.15);
+   --radius:       3px;
+   --font-head:    'Montserrat', sans-serif;
+   --font-body:    'Open Sans', sans-serif;
+  }
+  
+  /*  Сброс  */
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+  html { font-size: 16px; }
+  body {
+   font-family: var(--font-body);
+   font-size: 15px;
+   line-height: 1.65;
+   color: var(--body-text);
+   background: var(--bg-page);
+   min-height: 100vh;
+  }
+  a { color: var(--teal); text-decoration: none; transition: color .18s; }
+  a:hover { color: var(--teal-dark); }
+  
+  /*  TOPBAR  */
+  .topbar {
+   position: sticky;
+   top: 0;
+   z-index: 200;
+   background: var(--white);
+   border-bottom: 1px solid var(--border);
+   box-shadow: 0 2px 6px rgba(0,0,0,.05);
+   display: flex;
+   align-items: center;
+   justify-content: space-between;
+   padding: 0 40px;
+   height: 62px;
+  }
+  
+  .topbar > div:first-child a {
+   font-family: var(--font-head);
+   font-size: 13px;
+   font-weight: 700;
+   letter-spacing: .10em;
+   text-transform: uppercase;
+   color: var(--nav-text);
+  }
+  .topbar > div:first-child a:hover { color: var(--teal); }
+  
+  .topbar .right {
+   display: flex;
+   align-items: center;
+   gap: 22px;
+  }
+  .topbar .right a {
+   font-family: var(--font-head);
+   font-size: 13px;
+   font-weight: 600;
+   letter-spacing: .04em;
+   color: var(--nav-text);
+  }
+  .topbar .right a:hover { color: var(--teal); }
+  
+  .topbar .muted {
+   font-size: 13px;
+   font-family: var(--font-head);
+   color: var(--muted);
+  }
+  .topbar form { display: inline-flex; align-items: center; }
+  
+  button.link {
+   background: none;
+   border: none;
+   cursor: pointer;
+   font-family: var(--font-head);
+   font-size: 13px;
+   font-weight: 600;
+   letter-spacing: .04em;
+   color: var(--nav-text);
+   padding: 0;
+   transition: color .18s;
+  }
+  button.link:hover { color: var(--teal); }
+  
+  /*  Флэш-сообщения  */
+  body > ul { list-style: none; border-bottom: 1px solid var(--teal-border); }
+  body > ul li {
+   padding: 10px 40px;
+   background: var(--teal-pale);
+   font-size: 13px;
+   color: var(--teal-dark);
+  }
+  
+  /*  Панель поиска  */
+  .row {
+   display: flex;
+   flex-wrap: wrap;
+   align-items: center;
+   gap: 10px;
+   padding: 26px 40px 14px;
+   max-width: 1140px;
+   margin: 0 auto;
+  }
+  
+  #q,
+  .row input[type="text"],
+  .row input:not([type]) {
+   flex: 1 1 240px;
+   height: 42px;
+   padding: 0 16px;
+   border: 1px solid var(--border);
+   border-radius: 2px;
+   background: var(--white);
+   font-family: var(--font-body);
+   font-size: 14px;
+   color: var(--body-text);
+   outline: none;
+   transition: border-color .18s, box-shadow .18s;
+  }
+  #q:focus, .row input:focus {
+   border-color: var(--teal);
+   box-shadow: 0 0 0 3px rgba(58,157,168,.11);
+  }
+  #q::placeholder, .row input::placeholder { color: var(--muted); }
+  
+  #category, #type, .row select {
+   height: 42px;
+   min-width: 165px;
+   padding: 0 36px 0 14px;
+   border: 1px solid var(--border);
+   border-radius: 2px;
+   background: var(--white)
+	 url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='10' height='6'%3E%3Cpath d='M0 0l5 6 5-6z' fill='%238aa0aa'/%3E%3C/svg%3E")
+	 no-repeat right 12px center / 10px 6px;
+   -webkit-appearance: none;
+   appearance: none;
+   font-family: var(--font-body);
+   font-size: 14px;
+   color: var(--body-text);
+   cursor: pointer;
+   outline: none;
+   transition: border-color .18s;
+  }
+  #category:focus, #type:focus, .row select:focus { border-color: var(--teal); }
+  
+  button,
+  input[type="submit"],
+  input[type="button"] {
+   display: inline-flex;
+   align-items: center;
+   justify-content: center;
+   height: 42px;
+   padding: 0 26px;
+   border: none;
+   border-radius: 24px;
+   font-family: var(--font-head);
+   font-size: 12px;
+   font-weight: 700;
+   letter-spacing: .10em;
+   text-transform: uppercase;
+   cursor: pointer;
+   white-space: nowrap;
+   transition: background .18s, box-shadow .18s, color .18s, border-color .18s;
+  }
+  
+  #search {
+   background: var(--teal);
+   color: var(--white);
+   box-shadow: 0 3px 10px rgba(58,157,168,.28);
+  }
+  #search:hover {
+   background: var(--teal-dark);
+   box-shadow: 0 5px 16px rgba(43,125,135,.35);
+  }
+  
+  #reset {
+   background: transparent;
+   color: var(--muted);
+   border: 1px solid var(--border);
+  }
+  #reset:hover {
+   border-color: var(--teal-border);
+   color: var(--teal);
+   background: var(--teal-pale);
+  }
+  
+  /*  Подсказка  */
+  #auth-hint {
+   max-width: 1140px;
+   margin: 0 auto;
+   padding: 0 40px 10px;
+   font-size: 13px;
+   color: var(--muted);
+   min-height: 18px;
+  }
+  
+  /* ════════════════════════════════════════════════════════════
+	СПИСОК ДОКУМЕНТОВ — ТАБЛИЧНЫЙ ВИД
+	Структура одной строки (li.card):
+	  .title  →  [div без класса = описание]  →  .meta  →  .preview  →  .actions
+	════════════════════════════════════════════════════════════ */
+  
+  #list,
+  ul.list {
+   list-style: none;
+   display: flex;
+   flex-direction: column;
+   max-width: 1140px;
+   margin: 0 auto;
+   padding: 0 40px 32px;
+  }
+  
+  /* Псевдо-заголовок таблицы — через первую линию */
+  #list::before,
+  ul.list::before {
+   content: '';
+   display: block;
+   height: 2px;
+   background: var(--teal);
+   margin-bottom: 0;
+  }
+  
+  /*  Строка  */
+  .card {
+   display: flex;
+   flex-direction: row;
+   align-items: center;
+   min-height: 58px;
+   padding: 12px 16px;
+   background: var(--white);
+   border-bottom: 1px solid var(--border);
+   border-left: 3px solid transparent;
+   gap: 0;
+   transition: background .15s, border-left-color .15s;
+   /* Убираем box-shadow и transform — в таблице они не нужны */
+   box-shadow: none;
+  }
+  .card:nth-child(even) { background: var(--bg-row-alt); }
+  .card:hover {
+   background: var(--teal-pale);
+   border-left-color: var(--teal);
+  }
+  
+  /* "Ничего не найдено" */
+  .card.muted {
+   justify-content: center;
+   align-items: center;
+   min-height: 100px;
+   font-style: italic;
+   color: var(--muted);
+   font-size: 14px;
+   border-left-color: transparent;
+   background: var(--white);
+  }
+  
+  /*  Колонка 1: Название + Описание  */
+  .card .title {
+   flex: 1 1 0;
+   min-width: 0;
+   padding-right: 20px;
+  }
+  
+  .card .title,
+  .card .title + div { /* описание — первый div после .title */ }
+  
+  /* Название */
+  .card .title {
+   font-family: var(--font-head);
+   font-size: 14px;
+   font-weight: 700;
+   color: var(--nav-text);
+   line-height: 1.35;
+   /* flex-column чтобы описание шло под названием */
+   display: flex;
+   flex-direction: column;
+   gap: 2px;
+  }
+  
+  /* Описание — div без класса, идущий сразу после .title в DOM.
+	JS рендерит: title → description_div → meta → preview? → actions
+	Мы забираем description в визуальный блок title через соседний селектор. */
+  .card > div:not(.title):not(.meta):not(.actions) {
+   /* Этот div — описание. Убираем его из потока и "вставляем" под title
+	  с помощью order в flex-контейнере .card */
+   order: 1;            /* сразу после title (order:0) */
+   flex: 1 1 0;
+   min-width: 0;
+   padding-right: 20px;
+   font-size: 12px;
+   color: var(--muted);
+   line-height: 1.4;
+   /* Обрезаем длинные описания в одну строку */
+   white-space: nowrap;
+   overflow: hidden;
+   text-overflow: ellipsis;
+  }
+  
+  /* Чтобы title + description выглядели как одна колонка,
+	убираем .title из обычного потока и строим двухстрочный блок */
+  .card .title { order: 0; flex: 0 0 auto; padding-right: 0; }
+  
+  /* Обёртка title+description — реализуем через wrapper-приём:
+	Так как JS не добавляет обёртку, используем display:contents + абсолютный порядок.
+	Простейшее рабочее решение: делаем .card position:relative и прячем description
+	внутри title-колонки через отрицательный margin. */
+  
+  /* Чище всего: превратим .card в grid с именованными зонами */
+  .card {
+   display: grid;
+   grid-template-columns: 1fr auto auto auto;
+   grid-template-rows: auto auto;
+   grid-template-areas:
+	 "title   meta  preview  actions"
+	 "desc    meta  preview  actions";
+   column-gap: 0;
+   row-gap: 0;
+   align-items: center;
+  }
+  
+  .card .title {
+   grid-area: title;
+   padding-right: 20px;
+   font-family: var(--font-head);
+   font-size: 14px;
+   font-weight: 700;
+   color: var(--nav-text);
+   line-height: 1.35;
+   align-self: end;
+  }
+  
+  /* Описание */
+  .card > div:not(.title):not(.meta):not(.actions) {
+   grid-area: desc;
+   padding-right: 20px;
+   font-size: 12px;
+   color: var(--muted);
+   line-height: 1.4;
+   white-space: nowrap;
+   overflow: hidden;
+   text-overflow: ellipsis;
+   align-self: start;
+  }
+  
+  /* Если описания нет — title растягивается на обе строки */
+  .card .title:only-of-type { grid-row: 1 / 3; align-self: center; }
+  
+  /*  Колонка 2: Мета  */
+  .card .meta {
+   grid-area: meta;
+   grid-row: 1 / 3;       /* spans both rows */
+   width: 170px;
+   padding: 0 18px;
+   font-size: 12px;
+   color: var(--muted);
+   line-height: 1.7;
+   border-left: 1px solid var(--border);
+   align-self: stretch;
+   display: flex;
+   flex-direction: column;
+   justify-content: center;
+  }
+  
+  /*  Колонка 3: Превью  */
+  .card .preview {
+   grid-area: preview;
+   grid-row: 1 / 3;
+   width: 64px;
+   height: 46px;
+   object-fit: cover;
+   border-radius: 2px;
+   border: 1px solid var(--border);
+   margin: 0 14px;
+  }
+  
+  /*  Колонка 4: Действия  */
+  .card .actions {
+   grid-area: actions;
+   grid-row: 1 / 3;
+   width: 100px;
+   display: flex;
+   align-items: center;
+   justify-content: flex-end;
+   padding-left: 14px;
+   border-left: 1px solid var(--border);
+   align-self: stretch;
+  }
+  
+  .card .actions a {
+   display: inline-flex;
+   align-items: center;
+   font-family: var(--font-head);
+   font-size: 11px;
+   font-weight: 700;
+   letter-spacing: .09em;
+   text-transform: uppercase;
+   color: var(--teal);
+   padding-left: 20px;
+   position: relative;
+   white-space: nowrap;
+   transition: color .18s, padding-left .18s;
+  }
+  .card .actions a::before {
+   content: '';
+   position: absolute;
+   left: 0;
+   top: 50%;
+   width: 13px;
+   height: 2px;
+   background: var(--teal);
+   transform: translateY(-50%);
+   transition: width .18s;
+  }
+  .card .actions a:hover { color: var(--teal-dark); padding-left: 24px; }
+  .card .actions a:hover::before { width: 17px; }
+  
+  .card .actions .muted {
+   font-size: 11px;
+   color: var(--muted);
+   font-style: italic;
+   white-space: nowrap;
+   text-align: right;
+  }
+  
+  /*  Пагинация  */
+  .pager {
+   display: flex;
+   align-items: center;
+   justify-content: center;
+   gap: 16px;
+   padding: 20px 40px 52px;
+   max-width: 1140px;
+   margin: 0 auto;
+  }
+  
+  #prev, #next {
+   height: 40px;
+   padding: 0 22px;
+   background: var(--white);
+   color: var(--teal);
+   border: 1px solid var(--teal-border);
+   border-radius: 22px;
+   font-family: var(--font-head);
+   font-weight: 700;
+   font-size: 12px;
+   letter-spacing: .08em;
+   text-transform: uppercase;
+   transition: background .18s, color .18s, border-color .18s;
+  }
+  #prev:hover:not(:disabled), #next:hover:not(:disabled) {
+   background: var(--teal);
+   color: var(--white);
+   border-color: var(--teal);
+  }
+  #prev:disabled, #next:disabled {
+   opacity: .35;
+   cursor: not-allowed;
+  }
+  
+  #pageinfo {
+   font-size: 13px;
+   color: var(--muted);
+   min-width: 130px;
+   text-align: center;
+   font-family: var(--font-head);
+  }
+  
+  /*  Утилиты  */
+  .muted { color: var(--muted); }
+  .hint  { font-size: 13px; }
+  
+  /*  Адаптив  */
+  @media (max-width: 860px) {
+   /* Скрываем превью на планшете */
+   .card .preview { display: none; }
+   .card { grid-template-columns: 1fr auto auto; }
+  }
+  
+  @media (max-width: 640px) {
+   .topbar { padding: 0 16px; height: 54px; }
+   .topbar .muted { display: none; }
+   .topbar .right { gap: 14px; }
+  
+   .row, #list, ul.list, #auth-hint, .pager {
+	 padding-left: 16px;
+	 padding-right: 16px;
+   }
+  
+   /* На мобильном — мета тоже скрываем, оставляем только title+действие */
+   .card .meta { display: none; }
+   .card {
+	 grid-template-columns: 1fr auto;
+	 grid-template-areas:
+	   "title   actions"
+	   "desc    actions";
+   }
+  
+   #q, .row input { flex-basis: 100%; }
+   #category, #type { flex-basis: calc(50% - 5px); min-width: unset; }
+  }
+
+/* ════════════════════════════════════════════════════════════
+   ФОРМЫ DJANGO-ALLAUTH
+   Разметка: body > h1, body > p, body > form > p > label+input
+   Стили только на теги — классов на элементах формы нет.
+   ════════════════════════════════════════════════════════════ */
+
+/* H1 прямо в body (вне .topbar) */
+body > h1 {
+  max-width: 420px;
+  margin: 48px auto 0;
+  padding: 0 16px;
+  font-family: var(--font-head);
+  font-size: 20px;
+  font-weight: 700;
+  letter-spacing: .06em;
+  text-transform: uppercase;
+  color: var(--nav-text);
+}
+
+/* Абзац-подсказка перед формой (allauth: "если нет аккаунта — зарегистрируйтесь") */
+body > p {
+  max-width: 420px;
+  margin: 10px auto 0;
+  padding: 0 16px;
+  font-size: 13px;
+  color: var(--muted);
+}
+
+/* Форма — карточка */
+body > form {
+  max-width: 420px;
+  margin: 20px auto 60px;
+  padding: 36px 40px 32px;
+  background: var(--white);
+  border-top: 3px solid var(--teal);
+  border-radius: var(--radius);
+  box-shadow: var(--shadow-md);
+}
+
+/* Каждый <p> внутри формы — строка поля */
+body > form > p {
+  margin-bottom: 16px;
+}
+body > form > p:last-of-type {
+  margin-bottom: 0;
+}
+
+/* Лейблы */
+body > form label {
+  display: block;
+  font-family: var(--font-head);
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: .09em;
+  text-transform: uppercase;
+  color: var(--muted);
+  margin-bottom: 6px;
+}
+
+/* Текстовые и парольные инпуты */
+body > form input[type="email"],
+body > form input[type="password"],
+body > form input[type="text"] {
+  display: block;
+  width: 100%;
+  height: 42px;
+  padding: 0 16px;
+  border: 1px solid var(--border);
+  border-radius: 2px;
+  background: var(--white);
+  font-family: var(--font-body);
+  font-size: 14px;
+  color: var(--body-text);
+  outline: none;
+  transition: border-color .18s, box-shadow .18s;
+}
+body > form input[type="email"]:focus,
+body > form input[type="password"]:focus,
+body > form input[type="text"]:focus {
+  border-color: var(--teal);
+  box-shadow: 0 0 0 3px rgba(58,157,168,.11);
+}
+body > form input::placeholder {
+  color: var(--muted);
+}
+
+/* Чекбокс «Запомнить меня» — строим горизонтальный ряд label + checkbox */
+body > form p:has(input[type="checkbox"]) {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin-top: 4px;
+  margin-bottom: 20px;
+}
+body > form p:has(input[type="checkbox"]) label {
+  margin-bottom: 0;
+  font-size: 13px;
+  text-transform: none;
+  letter-spacing: 0;
+  font-family: var(--font-body);
+  color: var(--body-text);
+  cursor: pointer;
+  order: 2;
+}
+body > form input[type="checkbox"] {
+  order: 1;
+  width: 16px;
+  height: 16px;
+  accent-color: var(--teal);
+  cursor: pointer;
+  flex-shrink: 0;
+}
+
+/* Подсказка «Забыли пароль?» */
+body > form .helptext {
+  display: block;
+  margin-top: 5px;
+  font-size: 12px;
+  color: var(--muted);
+}
+body > form .helptext a {
+  color: var(--muted);
+  text-decoration: underline;
+  text-underline-offset: 2px;
+  transition: color .18s;
+}
+body > form .helptext a:hover {
+  color: var(--teal);
+}
+
+/* Ошибки полей — ul без класса внутри p */
+body > form p > ul {
+  list-style: none;
+  padding: 0;
+  margin-top: 5px;
+}
+body > form p > ul li {
+  font-size: 12px;
+  color: #c0392b;
+  line-height: 1.4;
+}
+
+/* non_field_errors — ul прямой потомок form */
+body > form > ul {
+  list-style: none;
+  padding: 0;
+  margin-bottom: 18px;
+}
+body > form > ul li {
+  padding: 3px 8px;
+  background: #fdf0ef;
+  /* border-left: 3px solid #c0392b; */
+  border-radius: 2px;
+  font-size: 13px;
+  /* color: #c0392b; */
+  color:  var(--muted);
+  /* background-color:; */
+  margin-bottom: 6px;
+}
+
+/* Кнопка */
+body > form button[type="submit"] {
+  width: 100%;
+  margin-top: 8px;
+  background: var(--teal);
+  color: var(--white);
+  box-shadow: 0 3px 10px rgba(58,157,168,.28);
+}
+body > form button[type="submit"]:hover {
+  background: var(--teal-dark);
+  box-shadow: 0 5px 16px rgba(43,125,135,.35);
+}
+
+/* Адаптив */
+@media (max-width: 480px) {
+  body > h1,
+  body > p {
+    padding: 0 16px;
+  }
+  body > form {
+    margin-left: 16px;
+    margin-right: 16px;
+    padding: 28px 20px 24px;
+  }
+}

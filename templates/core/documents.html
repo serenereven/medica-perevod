@@ -1,0 +1,175 @@
+{% extends "base.html" %}
+{% block title %}Документы{% endblock %}
+
+{% block content %}
+
+<div class="row">
+  <input id="q" placeholder="Поиск по названию/описанию" />
+  <select id="category"></select>
+  <select id="type"></select>
+  <button id="search">Найти</button>
+  <button id="reset" class="muted">Сброс</button>
+</div>
+
+<div id="auth-hint" class="hint"></div>
+
+<ul id="list" class="list"></ul>
+
+<div class="pager">
+  <button id="prev">← Назад</button>
+  <span id="pageinfo" class="muted"></span>
+  <button id="next">Вперёд →</button>
+</div>
+
+<script>
+  let nextUrl = null;
+  let prevUrl = null;
+  let totalCount = 0;
+  let pageSize = 20;
+
+  function escapeHtml(s) {
+    return String(s)
+      .replaceAll("&", "&amp;")
+      .replaceAll("<", "&lt;")
+      .replaceAll(">", "&gt;")
+      .replaceAll('"', "&quot;")
+      .replaceAll("'", "&#039;");
+  }
+
+  function buildListUrl(base = "/api/documents/") {
+    const p = new URLSearchParams();
+    const q = document.getElementById("q").value.trim();
+    const category = document.getElementById("category").value;
+    const type = document.getElementById("type").value;
+
+    if (q) p.set("q", q);
+    if (category) p.set("category", category);
+    if (type) p.set("type", type);
+
+    // Если ты подключил page_size_query_param (в своей кастомной пагинации),
+    // то это будет работать. Если нет — просто игнорируется DRF-ом.
+    p.set("page_size", String(pageSize));
+
+    const qs = p.toString();
+    return qs ? `${base}?${qs}` : base;
+  }
+
+  async function loadMeta() {
+    const resp = await fetch("/api/documents/meta/", {credentials: "same-origin"});
+    if (!resp.ok) {
+      document.getElementById("auth-hint").textContent =
+        "Не удалось загрузить справочники (meta). Проверь /api/documents/meta/";
+      return;
+    }
+
+    const data = await resp.json();
+
+    document.getElementById("auth-hint").textContent =
+      data.authenticated ? "" : "Войдите, чтобы появилась кнопка «Скачать».";
+
+    const cat = document.getElementById("category");
+    const typ = document.getElementById("type");
+
+    cat.innerHTML =
+      `<option value="">Все категории</option>` +
+      (data.document_categories || []).map(x =>
+        `<option value="${escapeHtml(x.value)}">${escapeHtml(x.label)}</option>`
+      ).join("");
+
+    typ.innerHTML =
+      `<option value="">Все типы</option>` +
+      (data.document_types || []).map(x =>
+        `<option value="${escapeHtml(x.value)}">${escapeHtml(x.label)}</option>`
+      ).join("");
+  }
+
+  function renderList(payload) {
+    totalCount = payload.count || 0;
+    nextUrl = payload.next;
+    prevUrl = payload.previous;
+
+    const list = document.getElementById("list");
+    list.innerHTML = "";
+
+    const results = payload.results || [];
+    if (results.length === 0) {
+      const li = document.createElement("li");
+      li.className = "card muted";
+      li.textContent = "Ничего не найдено.";
+      list.appendChild(li);
+    }
+
+    for (const d of results) {
+      const li = document.createElement("li");
+      li.className = "card";
+
+      const title = `<div class="title">${escapeHtml(d.title)}</div>`;
+      const desc = d.description ? `<div>${escapeHtml(d.description)}</div>` : "";
+
+      const meta = `<div class="meta">
+        ${escapeHtml(d.file_size_display || "")}
+        ${d.extension ? ` · ${escapeHtml(d.extension)}` : ""}
+        · скачиваний: ${d.download_count ?? 0}
+      </div>`;
+
+      const preview = d.preview_url
+        ? `<img class="preview" src="${escapeHtml(d.preview_url)}" alt="preview">`
+        : "";
+
+      const actions = `<div class="actions">
+        ${d.download_url
+          ? `<a href="${escapeHtml(d.download_url)}">Скачать</a>`
+          : `<span class="muted">Войдите, чтобы скачать</span>`
+        }
+      </div>`;
+
+      li.innerHTML = title + desc + meta + preview + actions;
+      list.appendChild(li);
+    }
+
+    document.getElementById("prev").disabled = !prevUrl;
+    document.getElementById("next").disabled = !nextUrl;
+
+    // Примерно оценим номер страницы по next/prev (DRF не отдаёт page явно)
+    const shown = results.length;
+    document.getElementById("pageinfo").textContent =
+      `Показано: ${shown} из ${totalCount}`;
+  }
+
+  async function loadList(url) {
+    const resp = await fetch(url, {credentials: "same-origin"});
+    if (!resp.ok) {
+      const text = await resp.text();
+      document.getElementById("list").innerHTML =
+        `<li class="card">Ошибка загрузки списка: ${resp.status}<pre>${escapeHtml(text)}</pre></li>`;
+      return;
+    }
+    const data = await resp.json();
+    renderList(data);
+  }
+
+  document.getElementById("search").addEventListener("click", () => {
+    loadList(buildListUrl());
+  });
+
+  document.getElementById("reset").addEventListener("click", () => {
+    document.getElementById("q").value = "";
+    document.getElementById("category").value = "";
+    document.getElementById("type").value = "";
+    loadList(buildListUrl());
+  });
+
+  document.getElementById("prev").addEventListener("click", () => {
+    if (prevUrl) loadList(prevUrl);
+  });
+
+  document.getElementById("next").addEventListener("click", () => {
+    if (nextUrl) loadList(nextUrl);
+  });
+
+  (async function init() {
+    await loadMeta();
+    await loadList(buildListUrl());
+  })();
+</script>
+{% endblock %}

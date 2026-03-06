@@ -1,0 +1,114 @@
+<form id="feedback-form" class="uk-form-stacked" method="post" action="{% url 'core:index' %}">
+  {% csrf_token %}
+  <div class="uk-margin">
+    <label class="uk-form-label" for="feedback-name">Имя</label>
+    <div class="uk-form-controls">
+      <input class="uk-input" id="feedback-name" name="name" type="text" required autocomplete="name">
+      <div class="uk-text-danger uk-text-small uk-margin-small-top" data-error-for="name"></div>
+    </div>
+  </div>
+  <div class="uk-margin">
+    <label class="uk-form-label" for="feedback-phone">Телефон</label>
+    <div class="uk-form-controls">
+      <input class="uk-input" id="feedback-phone" name="phone" type="tel" required placeholder="+79991234567" autocomplete="tel">
+      <div class="uk-text-danger uk-text-small uk-margin-small-top" data-error-for="phone"></div>
+    </div>
+  </div>
+  <div class="form-privacy uk-text-small uk-text-muted uk-margin-small-top">
+    <label class="uk-form-label">
+      <input type="checkbox" name="privacy" id="privacy" class="uk-checkbox" required>
+      <span class="uk-margin-small-left">
+        Я даю согласие на обработку моих персональных данных в соответствии с
+        <a href="#" class="privacy-link">Политикой конфиденциальности</a>
+      </span>
+    </label>
+  </div>
+  <div class="uk-margin">
+    <button type="submit" class="uk-button uk-button-primary uk-width-1-1">
+      Оставить заявку
+    </button>
+  </div>
+  <div id="feedback-success" class="uk-alert-success uk-margin" uk-alert style="display:none;">
+    <a class="uk-alert-close" uk-close></a>
+    <div></div>
+  </div>
+</form>
+
+<script>
+  function clearErrors(form) {
+    form.querySelectorAll('[data-error-for]').forEach(el => el.textContent = '');
+  }
+
+  function showErrors(form, errors) {
+    Object.entries(errors).forEach(([field, messages]) => {
+      const el = form.querySelector(`[data-error-for="${field}"]`);
+      if (el) el.textContent = (messages || []).join(' ');
+    });
+  }
+
+  function syncVehicleTitle() {
+    const titleInput = document.getElementById("feedback-vehicle-title");
+    const titleView = document.getElementById("feedback-vehicle-title-view");
+    if (!titleView) return;
+    const t = (titleInput?.value || "").trim();
+    titleView.textContent = t ? t : "Не выбрано";
+  }
+
+  document.addEventListener("DOMContentLoaded", () => {
+    const form = document.getElementById("feedback-form");
+    if (!form) return;
+
+    syncVehicleTitle();
+
+    document.addEventListener("click", (e) => {
+      const el = e.target.closest("[data-feedback-open]");
+      if (!el) return;
+
+      if (el.tagName === "A") e.preventDefault();
+
+      const vid = el.getAttribute("data-vehicle-id") || "";
+      const vtitle = el.getAttribute("data-vehicle-title") || "";
+
+      const idInput = document.getElementById("feedback-vehicle-id");
+      const titleInput = document.getElementById("feedback-vehicle-title");
+
+      if (idInput) idInput.value = vid;
+      if (titleInput) titleInput.value = vtitle;
+
+      form.style.display = "";
+      const success = document.getElementById("feedback-success");
+      if (success) {
+        success.style.display = "none";
+        success.textContent = "";
+      }
+      clearErrors(form);
+      syncVehicleTitle();
+    });
+
+    form.addEventListener("submit", async (e) => {
+      e.preventDefault();
+      clearErrors(form);
+
+      const formData = new FormData(form);
+
+      const resp = await fetch(form.action, {
+        method: "POST",
+        body: formData,
+        headers: { "X-Requested-With": "XMLHttpRequest" }
+      });
+
+      const data = await resp.json();
+
+      if (!resp.ok || !data.ok) {
+        showErrors(form, data.errors || {});
+        return;
+      }
+
+      form.style.display = "none";
+
+      const success = document.getElementById("feedback-success");
+      success.textContent = data.message || "Спасибо, мы свяжемся с вами";
+      success.style.display = "block";
+    });
+  });
+</script>

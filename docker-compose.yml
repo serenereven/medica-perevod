@@ -1,0 +1,55 @@
+services:
+  web:
+    build: .
+    container_name: ${PROJECT_NAME:-medica}_web
+    command: /app/scripts/entrypoint.sh
+    env_file:
+      - .env
+    restart: always
+    depends_on:
+      - db
+    expose:
+      - "8000"
+    volumes:
+      - ./staticfiles:/app/staticfiles
+      - ./media:/app/media
+
+  nginx:
+    image: nginx:1.25-alpine
+    container_name: ${PROJECT_NAME:-medica}_nginx
+    restart: always
+    depends_on:
+      - web
+    env_file:
+      - .env
+    ports:
+      - "80:80"
+      - "443:443"
+    volumes:
+      - ./nginx/templates:/etc/nginx/templates:ro
+      - ./nginx/generate.sh:/docker-entrypoint.d/99-generate.sh:ro
+      - ./staticfiles:/staticfiles:ro
+      - ./media:/media:ro
+      - certbot_www:/var/www/certbot:ro
+      - letsencrypt:/etc/letsencrypt:ro
+
+  certbot:
+    image: certbot/certbot:latest
+    container_name: ${PROJECT_NAME:-medica}_certbot
+    volumes:
+      - certbot_www:/var/www/certbot
+      - letsencrypt:/etc/letsencrypt
+
+  db:
+    image: postgres:16
+    container_name: ${PROJECT_NAME:-medica}_db
+    restart: always
+    env_file:
+      - .env
+    volumes:
+      - pgdata:/var/lib/postgresql/data
+
+volumes:
+  pgdata:
+  letsencrypt:
+  certbot_www:

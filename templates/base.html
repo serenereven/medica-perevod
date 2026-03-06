@@ -1,0 +1,38 @@
+{% load static %}
+<html lang="ru">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>{% block title %}Medica-perevod{% endblock %}</title>
+  <link rel="stylesheet" href="{% static 'common/css/style.css' %}" />
+</head>
+<body class="medica-documents-body">
+
+<div class="topbar">
+  <div><a href="{% url 'core:documents_page' %}">Документы</a></div>
+
+  <div class="right">
+    {% if user.is_authenticated %}
+      <span class="muted">{{ user.email }}</span>
+      <form method="post" action="{% url 'account_logout' %}">
+        {% csrf_token %}
+        <button class="link" type="submit">Выйти</button>
+      </form>
+    {% else %}
+      <a href="{% url 'account_login' %}?next={{ request.path|urlencode }}">Вход</a>
+      <a href="{% url 'account_signup' %}?next={{ request.path|urlencode }}">Регистрация</a>
+    {% endif %}
+  </div>
+</div>
+
+{% if messages %}
+  <ul>
+    {% for message in messages %}
+      <li class="muted">{{ message }}</li>
+    {% endfor %}
+  </ul>
+{% endif %}
+
+{% block content %}{% endblock %}
+</body>
+</html>

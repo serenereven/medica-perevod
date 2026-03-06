@@ -1,0 +1,12 @@
+asgiref==3.11.0
+Django>=5.0,<5.3
+gunicorn>=21.2
+psycopg[binary]>=3.1
+django-ckeditor
+django-js-asset==3.1.2
+django-tree-queries
+packaging==25.0
+pillow==12.0.0
+python-dotenv
+sqlparse
+tzdata==2025.2

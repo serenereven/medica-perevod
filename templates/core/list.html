@@ -1,0 +1,117 @@
+<h1>Документы</h1>
+
+<div style="margin-bottom:12px;">
+  <input id="q" placeholder="Поиск..." />
+  <select id="category"></select>
+  <select id="type"></select>
+  <button id="search">Найти</button>
+</div>
+
+<div id="auth-hint" style="margin-bottom:12px; opacity:.75;"></div>
+<ul id="list"></ul>
+
+<div style="margin-top:12px;">
+  <button id="prev">←</button>
+  <span id="page"></span>
+  <button id="next">→</button>
+</div>
+
+<script>
+  let currentPage = 1;
+  let pages = 1;
+
+  async function loadMeta() {
+    const resp = await fetch("/api/documents/meta/", {credentials: "same-origin"});
+    const data = await resp.json();
+
+    document.getElementById("auth-hint").textContent =
+      data.authenticated ? "" : "Войдите, чтобы скачать документы.";
+
+    const cat = document.getElementById("category");
+    const typ = document.getElementById("type");
+
+    cat.innerHTML = `<option value="">Все категории</option>` +
+      data.document_categories.map(x => `<option value="${x.value}">${escapeHtml(x.label)}</option>`).join("");
+
+    typ.innerHTML = `<option value="">Все типы</option>` +
+      data.document_types.map(x => `<option value="${x.value}">${escapeHtml(x.label)}</option>`).join("");
+  }
+
+  function buildQS() {
+    const p = new URLSearchParams();
+    const q = document.getElementById("q").value.trim();
+    const category = document.getElementById("category").value;
+    const type = document.getElementById("type").value;
+
+    if (q) p.set("q", q);
+    if (category) p.set("category", category);
+    if (type) p.set("type", type);
+
+    p.set("page", String(currentPage));
+    p.set("page_size", "20");
+    return p.toString();
+  }
+
+  async function loadList() {
+    const resp = await fetch(`/api/documents/?${buildQS()}`, {credentials: "same-origin"});
+    const data = await resp.json();
+
+    // DRF pagination: {count, next, previous, results}
+    const list = document.getElementById("list");
+    list.innerHTML = "";
+
+    // вычислим страницы
+    pages = Math.max(1, Math.ceil((data.count || 0) / 20));
+
+    for (const d of data.results || []) {
+      const li = document.createElement("li");
+      li.style.marginBottom = "14px";
+
+      li.innerHTML = `
+        <div><strong>${escapeHtml(d.title)}</strong></div>
+        ${d.description ? `<div>${escapeHtml(d.description)}</div>` : ""}
+        <div>${escapeHtml(d.file_size_display)} · ${escapeHtml(d.extension)} · скачиваний: ${d.download_count}</div>
+        ${d.preview_url ? `<img src="${d.preview_url}" alt="preview" style="max-width:240px;height:auto;margin-top:6px;">` : ""}
+        <div style="margin-top:6px;">
+          ${d.can_download && d.download_url
+            ? `<a href="${d.download_url}">Скачать</a>`
+            : `<span style="opacity:.7;">Войдите, чтобы скачать</span>`}
+        </div>
+      `;
+      list.appendChild(li);
+    }
+
+    document.getElementById("page").textContent = `Страница ${currentPage} из ${pages}`;
+    document.getElementById("prev").disabled = currentPage <= 1;
+    document.getElementById("next").disabled = currentPage >= pages;
+  }
+
+  document.getElementById("search").addEventListener("click", () => {
+    currentPage = 1;
+    loadList();
+  });
+
+  document.getElementById("prev").addEventListener("click", () => {
+    currentPage = Math.max(1, currentPage - 1);
+    loadList();
+  });
+
+  document.getElementById("next").addEventListener("click", () => {
+    currentPage = Math.min(pages, currentPage + 1);
+    loadList();
+  });
+
+  function escapeHtml(s) {
+    return String(s)
+      .replaceAll("&", "&amp;")
+      .replaceAll("<", "&lt;")
+      .replaceAll(">", "&gt;")
+      .replaceAll('"', "&quot;")
+      .replaceAll("'", "&#039;");
+  }
+
+  (async function init() {
+    await loadMeta();
+    await loadList();
+  })();
+</script>
