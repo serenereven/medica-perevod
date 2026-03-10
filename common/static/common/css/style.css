@@ -57,7 +57,7 @@
   }
   .topbar > div:first-child a:hover { color: var(--teal); }
   
-  .topbar .right {
+  .topbar :is(.right, .left) {
    display: flex;
    align-items: center;
    gap: 22px;
@@ -490,7 +490,7 @@
   @media (max-width: 640px) {
    .topbar { padding: 0 16px; height: 54px; }
    .topbar .muted { display: none; }
-   .topbar .right { gap: 14px; }
+   .topbar :is(.right, .left) { gap: 14px; }
   
    .row, #list, ul.list, #auth-hint, .pager {
 	 padding-left: 16px;

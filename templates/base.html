@@ -4,12 +4,16 @@
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <title>{% block title %}Medica-perevod{% endblock %}</title>
+  <link rel="icon" href="{% static 'common/img/favicon.ico' %}" type="image/x-icon">
   <link rel="stylesheet" href="{% static 'common/css/style.css' %}" />
 </head>
 <body class="medica-documents-body">
 
 <div class="topbar">
-  <div><a href="{% url 'core:documents_page' %}">Документы</a></div>
+  <div class="left">
+    <a href="https://medica-perevod.ru"><img src="{% static 'common/img/logo.png' %}" alt="Medica-perevod" width="130" ></a>
+    <a href="{% url 'core:documents_page' %}">Документы</a>
+  </div>
 
   <div class="right">
     {% if user.is_authenticated %}
