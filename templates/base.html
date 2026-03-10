@@ -28,7 +28,7 @@
     {% endif %}
   </div>
 </div>
-
+<main>
 {% if messages %}
   <ul>
     {% for message in messages %}
@@ -36,7 +36,14 @@
     {% endfor %}
   </ul>
 {% endif %}
-
 {% block content %}{% endblock %}
+</main>
+<footer class="footer">
+  <div class="container">
+    <p class="muted">© {% now "Y" %} Medica-perevod</p>
+    <a href="https://medica-perevod.ru/policy/" class="muted">Политика конфиденциальности</a>
+    <a href="https://sites.onadmin.ru/" class="muted" target="_blank">Разработка сайтов ONADMIN</a>
+  </div>
+</footer>
 </body>
 </html>
