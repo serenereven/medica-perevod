@@ -196,6 +196,7 @@ class FullContentAdmin(
     search_fields = ("title", "slug")
     list_display = ("title", "slug", "is_published", "published_at", "created_at")
     list_select_related = False
+    list_editable = ("is_published")
     ordering = ("-created_at",)
 
     formfield_overrides = {

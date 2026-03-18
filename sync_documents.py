@@ -84,7 +84,7 @@ def sync():
     for rel in sorted(new_files):
         title = Path(rel).stem.replace('_', ' ').replace('-', ' ').title()
         try:
-            Document(title=title, file=rel, is_published=False).save()
+            Document(title=title, file=rel, is_published=True).save()
             cache.add(rel)
             log.info('  [+] Создан: %s  →  «%s»', rel, title)
         except Exception as exc:
