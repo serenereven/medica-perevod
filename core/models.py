@@ -27,9 +27,9 @@ class Document(TimeStampedModel, PublishableModel):
     
     title = models.CharField(max_length=255, verbose_name='Название')
     description = models.TextField(blank=True, verbose_name='Описание')
-    file = models.FileField(upload_to='documents/%Y-%m-%d/', verbose_name='Документ')
+    file = models.FileField(upload_to='documents/', verbose_name='Документ')
     preview = models.ImageField(
-        upload_to='documents/%Y-%m-%d/', 
+        upload_to='documents/preview/', 
         blank=True, 
         null=True, 
         verbose_name='Превью'
@@ -159,3 +159,9 @@ class Document(TimeStampedModel, PublishableModel):
         verbose_name = "Документ"
         verbose_name_plural = "Документы"
         ordering = ['-created_at']
+        constraints = [
+            models.UniqueConstraint(
+                fields=['file'],
+                name='unique_document_file'
+            )
+        ]
