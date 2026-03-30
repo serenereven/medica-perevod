@@ -191,11 +191,11 @@ ACCOUNT_FORMS = {
 }
 
 # Разлогин через 7 дней
+SESSION_ENGINE = 'django.contrib.sessions.backends.db'
 SESSION_COOKIE_AGE = 60 * 60 * 24 * 7
 SESSION_EXPIRE_AT_BROWSER_CLOSE = False
 # Обновлять срок сессии при активности:
 SESSION_SAVE_EVERY_REQUEST = False
-
 AUTH_USER_MODEL = "users.User"
 
 
