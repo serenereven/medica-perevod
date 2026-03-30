@@ -1,5 +1,3 @@
-# core/migrations/0003_documentcategory_alter_document_document_category.py
-
 from django.db import migrations, models
 import django.db.models.deletion
 

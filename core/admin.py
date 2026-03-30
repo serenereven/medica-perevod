@@ -4,7 +4,7 @@ from .models import Document, DocumentCategory
 
 
 @admin.register(DocumentCategory)
-class DocumentCategoryAdmin(TimeStampedAdminMixin, admin.ModelAdmin):
+class DocumentCategoryAdmin(admin.ModelAdmin):
     list_display = ['name']
     list_display_links = ['name']
     list_filter = ['name']
