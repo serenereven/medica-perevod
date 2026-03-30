@@ -1,6 +1,14 @@
 from django.contrib import admin
 from common.admin import TimeStampedAdminMixin, PublishableAdminMixin, SoftDeleteAdminMixin
-from .models import Document
+from .models import Document, DocumentCategory
+
+
+@admin.register(DocumentCategory)
+class DocumentCategoryAdmin(TimeStampedAdminMixin, admin.ModelAdmin):
+    list_display = ['name']
+    list_display_links = ['name']
+    list_filter = ['name']
+    search_fields = ['name']
 
 
 @admin.register(Document)

@@ -9,6 +9,18 @@ from common.models import (
 )
 
 
+class DocumentCategory(TimeStampedModel):
+    """Категория документа"""
+    name = models.CharField(max_length=100, verbose_name='Название')
+
+    def __str__(self):
+        return self.name
+
+    class Meta:
+        verbose_name = "Категория документа"
+        verbose_name_plural = "Категории документов"
+        ordering = ['name']
+
 class Document(TimeStampedModel, PublishableModel):
     """Документы"""
     
@@ -17,12 +29,6 @@ class Document(TimeStampedModel, PublishableModel):
         WORD = 'word', 'Word документ'
         EXCEL = 'excel', 'Excel таблица'
         IMAGE = 'image', 'Изображение'
-        OTHER = 'other', 'Другое'
-
-    class DocumentCategory(models.TextChoices):
-        # LICENSE = 'license', 'Лицензии'
-        # COMMENDATION = 'commendation', 'Благодарности'
-        TRANSLATE = 'translate', 'Переводы'
         OTHER = 'other', 'Другое'
     
     title = models.CharField(max_length=255, verbose_name='Название')
@@ -40,11 +46,13 @@ class Document(TimeStampedModel, PublishableModel):
         default=DocumentType.OTHER,
         verbose_name='Тип документа'
     )
-    document_category = models.CharField(
-        max_length=20,
-        choices=DocumentCategory.choices,
-        default=DocumentCategory.OTHER,
-        verbose_name='Категория документа'
+    document_category = models.ForeignKey(
+        'DocumentCategory',
+        on_delete=models.SET_NULL,
+        null=True,
+        blank=True,
+        verbose_name='Категория документа',
+        related_name='documents'
     )
     file_size = models.PositiveIntegerField(
         blank=True, 
@@ -87,42 +95,6 @@ class Document(TimeStampedModel, PublishableModel):
             }
             self.document_type = type_map.get(extension, self.DocumentType.OTHER)
             updated_fields.append('document_type')
-
-        # Превью только для PDF и только если ещё нет
-        # if self.document_type == self.DocumentType.PDF: #and not self.preview
-        #     try:
-        #         kwargs = {
-        #             "pdf_path": self.file.path,
-        #             "first_page": 1,
-        #             "last_page": 1,
-        #             "dpi": 150,
-        #         }
-
-        #         poppler_path = getattr(settings, "PDF2IMAGE_POPPLER_PATH", None)
-        #         if poppler_path:
-        #             kwargs["poppler_path"] = poppler_path
-
-        #         images = convert_from_path(
-        #             kwargs.pop("pdf_path"),
-        #             first_page=kwargs.pop("first_page"),
-        #             last_page=kwargs.pop("last_page"),
-        #             dpi=kwargs.pop("dpi"),
-        #             **kwargs
-        #         )
-
-        #         if images:
-        #             img = images[0]
-        #             img = trim_whitespace(img)
-
-        #             img_io = BytesIO()
-        #             img.save(img_io, format='JPEG', quality=85)
-        #             img_io.seek(0)
-
-        #             filename = f'previews/{slugify(Path(self.file.name).stem)}.jpg'
-        #             self.preview.save(filename, ContentFile(img_io.read()), save=False)
-        #             updated_fields.append('preview')
-        #     except Exception as e:
-        #         print(f"Ошибка создания превью: {e}")
 
         if updated_fields:
             super().save(update_fields=updated_fields)
