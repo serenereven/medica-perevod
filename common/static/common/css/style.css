@@ -620,7 +620,7 @@ main > form p:has(input[type="checkbox"]) label {
   font-family: var(--font-body);
   color: var(--body-text);
   cursor: pointer;
-  order: 2;
+  order: 0;
 }
 main > form input[type="checkbox"] {
   order: 1;
