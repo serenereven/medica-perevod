@@ -1,6 +1,6 @@
 from django.core.paginator import Paginator
 from django.views.generic import View, TemplateView, ListView, DetailView
-from .models import Document
+from .models import Document, DocumentCategory
 from django.shortcuts import render
 
 
@@ -25,9 +25,22 @@ from .api.serializers import DocumentListSerializer
 
 
 class DocumentListView(generics.ListAPIView):
-    queryset = Document.objects.filter(is_published=True)  # если PublishableModel
     serializer_class = DocumentListSerializer
     permission_classes = [permissions.AllowAny]
+
+    def get_queryset(self):
+        qs = Document.objects.filter(is_published=True)
+        category = self.request.query_params.get("category")
+        doc_type = self.request.query_params.get("type")
+        q = self.request.query_params.get("q")
+
+        if category:
+            qs = qs.filter(document_category__pk=category)
+        if doc_type:
+            qs = qs.filter(document_type=doc_type)
+        if q:
+            qs = qs.filter(title__icontains=q) | qs.filter(description__icontains=q)
+        return qs
 
     def get_serializer_context(self):
         ctx = super().get_serializer_context()
@@ -57,3 +70,20 @@ class DocumentDownloadView(APIView):
 
 def documents_page(request):
     return render(request, "core/documents.html")
+
+
+class DocumentMetaView(APIView):
+    permission_classes = [permissions.AllowAny]
+
+    def get(self, request):
+        categories = DocumentCategory.objects.all()
+        return Response({
+            "authenticated": request.user.is_authenticated,
+            "document_categories": [
+                {"value": str(c.pk), "label": c.name} for c in categories
+            ],
+            "document_types": [
+                {"value": v, "label": l}
+                for v, l in Document.DocumentType.choices
+            ],
+        })
