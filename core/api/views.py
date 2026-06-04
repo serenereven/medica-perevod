@@ -13,27 +13,18 @@ class DocumentViewSet(viewsets.ReadOnlyModelViewSet):
     permission_classes = [permissions.AllowAny]
 
     def get_queryset(self):
-        qs = Document.objects.filter(is_published=True)
-        # без order_by — использует Document.Meta.ordering
+        qs = Document.objects.filter(is_published=True).order_by("title")
 
         q = (self.request.query_params.get("q") or "").strip()
-        category = (self.request.query_params.get("category") or "").strip()
-        doc_type = (self.request.query_params.get("type") or "").strip()
 
         if q:
             qs = qs.filter(Q(title__icontains=q) | Q(description__icontains=q))
-        if category:
-            qs = qs.filter(document_category=category)
-        if doc_type:
-            qs = qs.filter(document_type=doc_type)
 
         return qs
 
     @action(detail=False, methods=["get"], url_path="meta", permission_classes=[permissions.AllowAny])
     def meta(self, request):
         return Response({
-            "document_types": [{"value": v, "label": label} for v, label in Document.DocumentType.choices],
-            "document_categories": [{"value": v, "label": label} for v, label in Document.DocumentCategory.choices],
             "authenticated": request.user.is_authenticated,
         })
 

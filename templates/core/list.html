@@ -2,8 +2,6 @@
 
 <div style="margin-bottom:12px;">
   <input id="q" placeholder="Поиск..." />
-  <select id="category"></select>
-  <select id="type"></select>
   <button id="search">Найти</button>
 </div>
 
@@ -26,26 +24,13 @@
 
     document.getElementById("auth-hint").textContent =
       data.authenticated ? "" : "Войдите, чтобы скачать документы.";
-
-    const cat = document.getElementById("category");
-    const typ = document.getElementById("type");
-
-    cat.innerHTML = `<option value="">Все категории</option>` +
-      data.document_categories.map(x => `<option value="${x.value}">${escapeHtml(x.label)}</option>`).join("");
-
-    typ.innerHTML = `<option value="">Все типы</option>` +
-      data.document_types.map(x => `<option value="${x.value}">${escapeHtml(x.label)}</option>`).join("");
   }
 
   function buildQS() {
     const p = new URLSearchParams();
     const q = document.getElementById("q").value.trim();
-    const category = document.getElementById("category").value;
-    const type = document.getElementById("type").value;
 
     if (q) p.set("q", q);
-    if (category) p.set("category", category);
-    if (type) p.set("type", type);
 
     p.set("page", String(currentPage));
     p.set("page_size", "20");
@@ -56,12 +41,12 @@
     const resp = await fetch(`/api/documents/?${buildQS()}`, {credentials: "same-origin"});
     const data = await resp.json();
 
-    // DRF pagination: {count, next, previous, results}
+    // DRF pagination: {count, from, to, next, previous, results}
     const list = document.getElementById("list");
     list.innerHTML = "";
 
-    // вычислим страницы
-    pages = Math.max(1, Math.ceil((data.count || 0) / 20));
+    const total = data.count || 0;
+    pages = Math.max(1, Math.ceil(total / 20));
 
     for (const d of data.results || []) {
       const li = document.createElement("li");
@@ -81,7 +66,11 @@
       list.appendChild(li);
     }
 
-    document.getElementById("page").textContent = `Страница ${currentPage} из ${pages}`;
+    const fromItem = data.from || 0;
+    const toItem = data.to || 0;
+    document.getElementById("page").textContent =
+      total > 0 ? `Показано ${fromItem}–${toItem} из ${total}` : "Ничего не найдено";
+
     document.getElementById("prev").disabled = currentPage <= 1;
     document.getElementById("next").disabled = currentPage >= pages;
   }
@@ -89,6 +78,10 @@
   document.getElementById("search").addEventListener("click", () => {
     currentPage = 1;
     loadList();
+  });
+
+  document.getElementById("q").addEventListener("keydown", (e) => {
+    if (e.key === "Enter") { currentPage = 1; loadList(); }
   });
 
   document.getElementById("prev").addEventListener("click", () => {
