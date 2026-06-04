@@ -1,6 +1,6 @@
 from django.db.models import Q, F
 from django.http import FileResponse
-from rest_framework import viewsets, permissions
+from rest_framework import viewsets, permissions, filters
 from rest_framework.decorators import action
 from rest_framework.response import Response
 
@@ -11,12 +11,13 @@ from .serializers import DocumentListSerializer
 class DocumentViewSet(viewsets.ReadOnlyModelViewSet):
     serializer_class = DocumentListSerializer
     permission_classes = [permissions.AllowAny]
+    filter_backends = [filters.OrderingFilter]
+    ordering_fields = ["title"]
+    ordering = ["title"]
 
     def get_queryset(self):
-        qs = Document.objects.filter(is_published=True).order_by("title")
-
+        qs = Document.objects.filter(is_published=True)
         q = (self.request.query_params.get("q") or "").strip()
-
         if q:
             qs = qs.filter(Q(title__icontains=q) | Q(description__icontains=q))
 

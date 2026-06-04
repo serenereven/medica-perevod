@@ -5,8 +5,6 @@
 
 <div class="row">
   <input id="q" placeholder="Поиск по названию/описанию" />
-  <select id="category"></select>
-  <select id="type"></select>
   <button id="search">Найти</button>
   <button id="reset" class="muted">Сброс</button>
 </div>
@@ -39,15 +37,9 @@
   function buildListUrl(base = "/api/documents/") {
     const p = new URLSearchParams();
     const q = document.getElementById("q").value.trim();
-    const category = document.getElementById("category").value;
-    const type = document.getElementById("type").value;
 
     if (q) p.set("q", q);
-    if (category) p.set("category", category);
-    if (type) p.set("type", type);
-
-    // Если ты подключил page_size_query_param (в своей кастомной пагинации),
-    // то это будет работать. Если нет — просто игнорируется DRF-ом.
+    p.set("ordering", "title");
     p.set("page_size", String(pageSize));
 
     const qs = p.toString();
@@ -66,21 +58,6 @@
 
     document.getElementById("auth-hint").textContent =
       data.authenticated ? "" : "Войдите, чтобы появилась кнопка «Скачать».";
-
-    const cat = document.getElementById("category");
-    const typ = document.getElementById("type");
-
-    cat.innerHTML =
-      `<option value="">Все категории</option>` +
-      (data.document_categories || []).map(x =>
-        `<option value="${escapeHtml(x.value)}">${escapeHtml(x.label)}</option>`
-      ).join("");
-
-    typ.innerHTML =
-      `<option value="">Все типы</option>` +
-      (data.document_types || []).map(x =>
-        `<option value="${escapeHtml(x.value)}">${escapeHtml(x.label)}</option>`
-      ).join("");
   }
 
   function renderList(payload) {
@@ -130,10 +107,8 @@
     document.getElementById("prev").disabled = !prevUrl;
     document.getElementById("next").disabled = !nextUrl;
 
-    // Примерно оценим номер страницы по next/prev (DRF не отдаёт page явно)
-    const shown = results.length;
     document.getElementById("pageinfo").textContent =
-      `Показано: ${shown} из ${totalCount}`;
+      `Показано ${payload.from}–${payload.to} из ${totalCount}`;
   }
 
   async function loadList(url) {
@@ -154,8 +129,6 @@
 
   document.getElementById("reset").addEventListener("click", () => {
     document.getElementById("q").value = "";
-    document.getElementById("category").value = "";
-    document.getElementById("type").value = "";
     loadList(buildListUrl());
   });
 
