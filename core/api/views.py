@@ -3,6 +3,7 @@ from django.http import FileResponse
 from rest_framework import viewsets, permissions, filters
 from rest_framework.decorators import action
 from rest_framework.response import Response
+from natsort import natsorted, ns
 
 from core.models import Document
 from .serializers import DocumentListSerializer
@@ -11,17 +12,29 @@ from .serializers import DocumentListSerializer
 class DocumentViewSet(viewsets.ReadOnlyModelViewSet):
     serializer_class = DocumentListSerializer
     permission_classes = [permissions.AllowAny]
-    filter_backends = [filters.OrderingFilter]
-    ordering_fields = ["title"]
-    ordering = ["title"]
 
     def get_queryset(self):
         qs = Document.objects.filter(is_published=True)
+
         q = (self.request.query_params.get("q") or "").strip()
         if q:
             qs = qs.filter(Q(title__icontains=q) | Q(description__icontains=q))
 
         return qs
+
+    def list(self, request, *args, **kwargs):
+        qs = self.get_queryset()
+
+        # Натуральная сортировка
+        sorted_qs = natsorted(qs, key=lambda d: d.title, alg=ns.LOCALE)
+
+        page = self.paginate_queryset(sorted_qs)
+        if page is not None:
+            serializer = self.get_serializer(page, many=True)
+            return self.get_paginated_response(serializer.data)
+
+        serializer = self.get_serializer(sorted_qs, many=True)
+        return Response(serializer.data)
 
     @action(detail=False, methods=["get"], url_path="meta", permission_classes=[permissions.AllowAny])
     def meta(self, request):
