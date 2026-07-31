@@ -185,9 +185,12 @@ ACCOUNT_LOGIN_ON_EMAIL_CONFIRMATION = True
 ACCOUNT_LOGIN_METHODS = {"email"}
 ACCOUNT_SIGNUP_FIELDS = ["email*", "password1*", "password2*"]
 ACCOUNT_EMAIL_VERIFICATION = "mandatory"
-
+ACCOUNT_SIGNUP_FORM_HONEYPOT_FIELD = "phone_number"
 ACCOUNT_FORMS = {
     "signup": "users.forms.CleanSignupForm",
+}
+ACCOUNT_RATE_LIMITS = {
+    "signup": "20/m/ip",
 }
 
 # Разлогин через 7 дней
