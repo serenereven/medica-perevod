@@ -25,11 +25,5 @@ handler404 = "common.views.error_page"
 handler500 = "common.views.error_page"
 
 if settings.DEBUG:
-    # Медиа файлы
     urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
-
-    # Статические файлы
-    urlpatterns += static(settings.STATIC_URL, document_root=settings.STATIC_ROOT)
-
-if settings.DEBUG:
     urlpatterns += static(settings.STATIC_URL, document_root=settings.STATIC_ROOT)

@@ -1,13 +1,9 @@
 {% extends "base.html" %}
 
-{% block title %}Страница не найдена{% endblock %}
-
 {% block content %}
 <div class="error-page">
-    <h1>404</h1>
-    <h2>Страница не найдена</h2>
-    <p>К сожалению, запрашиваемая страница не существует.</p>
-    <a href="{% url 'core:index' %}">Вернуться на главную</a>
+    <h1>{{ status_code }}</h1>
+    <p>{{ message }}</p>
+    <a href="/documents/">Вернуться к документам</a>
 </div>
 {% endblock %}
-    

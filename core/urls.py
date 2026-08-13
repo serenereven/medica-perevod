@@ -1,11 +1,12 @@
 from django.urls import path
-from .views import documents_page, DocumentMetaView
 from django.views.generic import RedirectView
+from .views import DocumentListView, DocumentDownloadView, DocumentMetaView
 
 app_name = "core"
 
 urlpatterns = [
     path("", RedirectView.as_view(pattern_name="core:documents_page", permanent=False)),
-    path("documents/", documents_page, name="documents_page"),
-    path("api/documents/meta/", DocumentMetaView.as_view()),
+    path("documents/", DocumentListView.as_view(), name="documents_page"),
+    path("documents/<int:pk>/download/", DocumentDownloadView.as_view(), name="document_download"),
+    path("api/documents/meta/", DocumentMetaView.as_view(), name="document_meta"),
 ]
