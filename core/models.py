@@ -104,23 +104,26 @@ class Document(TimeStampedModel, PublishableModel):
         return self.title
     
     def get_file_size_display(self):
-        """Размер файла в читаемом формате"""
-        if not self.file_size:
-            return "0 Б"
-        
-        size = float(self.file_size)
-        for unit in ['Б', 'КБ', 'МБ', 'ГБ']:
+        """
+        Размер файла в читаемом формате без обращения к БД.
+        """
+        size = self.file_size
+        for unit in ['B', 'KB', 'MB', 'GB']:
             if size < 1024.0:
-                return f"{size:.1f} {unit}"
+                return f'{size:.1f} {unit}'
             size /= 1024.0
-        return f"{size:.1f} ТБ"
+        return f'{size:.1f} TB'
     
-    def get_file_extension(self):
+    @cached_property
+    def file_extension(self):
         """Расширение файла"""
         import os
         if self.file:
             return os.path.splitext(self.file.name)[1][1:].upper()
         return ""
+    
+    def get_file_extension(self):
+        return self.file_extension
     
     def increment_downloads(self):
         """Увеличить счетчик скачиваний"""
