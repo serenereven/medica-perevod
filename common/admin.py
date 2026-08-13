@@ -2,7 +2,6 @@ from django.contrib import admin, messages
 from django.db import models
 from django.utils import timezone
 from ckeditor_uploader.widgets import CKEditorUploadingWidget
-from django.utils import timezone
 
 admin.site.site_header = 'Администрирование сайта'
 admin.site.site_title = 'Админ-панель'

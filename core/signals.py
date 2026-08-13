@@ -1,5 +1,5 @@
-# core/signals.py
-import logging, os
+import logging
+import os
 from django.db.models.signals import post_delete, pre_save
 from django.dispatch import receiver
 from core.models import Document

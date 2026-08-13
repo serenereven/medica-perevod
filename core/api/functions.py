@@ -1,5 +1,4 @@
-from django.db.models import Func, CharField, IntegerField, Value
-from django.db.models.functions import Cast, Coalesce
+from django.db.models import Func, CharField
 
 
 class ExtractLeadingText(Func):

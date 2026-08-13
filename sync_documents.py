@@ -1,5 +1,8 @@
 #!/usr/bin/env python
-import json, logging, os, sys
+import json
+import logging
+import os
+import sys
 from pathlib import Path
 
 # Настройки
@@ -13,10 +16,20 @@ SUPPORTED_EXTENSIONS   = {'pdf', 'doc', 'docx', 'xls', 'xlsx', 'jpg', 'jpeg', 'p
 # Django
 sys.path.insert(0, str(DJANGO_PROJECT_ROOT))
 os.environ.setdefault('DJANGO_SETTINGS_MODULE', DJANGO_SETTINGS_MODULE)
-import django; django.setup()
 
-from django.conf import settings
-from core.models import Document
+try:
+    import django
+    django.setup()
+except ImportError as e:
+    print(f"Error setting up Django: {e}")
+    sys.exit(1)
+
+try:
+    from django.conf import settings
+    from core.models import Document
+except ImportError as e:
+    print(f"Error importing Django models: {e}")
+    sys.exit(1)
 
 logging.basicConfig(level=logging.INFO,
                     format='%(asctime)s  %(levelname)s  %(message)s',
@@ -60,9 +73,12 @@ def scan_disk(media_root: Path) -> dict:
         log.warning('Папка не найдена: %s', scan_root)
         return result
     for path in scan_root.rglob('*'):
-        if not path.is_file(): continue
-        if 'preview' in path.parts: continue
-        if path.suffix.lstrip('.').lower() not in SUPPORTED_EXTENSIONS: continue
+        if not path.is_file(): 
+            continue
+        if 'preview' in path.parts: 
+            continue
+        if path.suffix.lstrip('.').lower() not in SUPPORTED_EXTENSIONS: 
+            continue
         result[str(path.relative_to(media_root))] = path
     return result
 

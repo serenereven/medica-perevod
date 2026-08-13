@@ -12,6 +12,9 @@ select = [
 ]
 ignore = [
     "E501",  # line too long (handled by formatter)
+    "W293",
+    "W292",
+    "I001",
 ]
 
 [lint.per-file-ignores]

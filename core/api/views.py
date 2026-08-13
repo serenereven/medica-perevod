@@ -3,7 +3,8 @@ from rest_framework.pagination import PageNumberPagination
 from core.models import Document
 from .serializers import DocumentListSerializer
 from .functions import ExtractLeadingText, ExtractFirstNumber
-
+from django.db.models.functions import Cast, Coalesce
+from django.db.models import IntegerField, Value
 
 class DocumentViewSet(viewsets.ReadOnlyModelViewSet):
     serializer_class = DocumentListSerializer

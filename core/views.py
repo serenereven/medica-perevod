@@ -3,7 +3,7 @@ from django.http import FileResponse, Http404
 from rest_framework import generics, permissions
 from rest_framework.views import APIView
 from rest_framework.response import Response
-
+from django.db.models import Q
 from .models import Document, DocumentCategory
 from .api.serializers import DocumentListSerializer
 
@@ -41,7 +41,7 @@ class DocumentDownloadView(APIView):
         try:
             doc = Document.objects.published().get(pk=pk)
         except Document.DoesNotExist:
-            raise Http404
+            raise Http404("Document not found") from err
 
         if not doc.file:
             raise Http404
@@ -64,12 +64,12 @@ class DocumentMetaView(APIView):
                 {
                     "value": str(c.pk), 
                     "label": c.name,
-                    "count": c.documents_count  # Доступно благодаря аннотации
+                    "count": c.documents_count
                 } 
                 for c in categories
             ],
             "document_types": [
-                {"value": v, "label": l}
-                for v, l in Document.DocumentType.choices
+                {"value": value, "label": label}
+                for value, label in Document.DocumentType.choices
             ],
         })

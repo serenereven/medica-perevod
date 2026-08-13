@@ -1,5 +1,6 @@
 import pytest
 from django.contrib.auth import get_user_model
+from django.db import IntegrityError
 
 User = get_user_model()
 
@@ -34,7 +35,7 @@ class TestUserModel:
         """Проверка уникальности email."""
         User.objects.create_user(email='user@example.com', password='pass123')
         
-        with pytest.raises(Exception):  # IntegrityError
+        with pytest.raises(IntegrityError):
             User.objects.create_user(email='user@example.com', password='pass456')
     
     def test_user_string_representation(self):

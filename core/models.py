@@ -1,13 +1,9 @@
 from django.db import models
 from common.models import (
-    UUIDPrimaryKeyModel,
-    FullContentModel,
-    PhoneField,
-    NormalizedEmailField,
     TimeStampedModel,
     PublishableModel,
 )
-
+from django.utils.functional import cached_property
 
 class DocumentCategory(TimeStampedModel):
     """Категория документа"""
