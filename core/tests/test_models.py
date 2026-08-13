@@ -1,6 +1,5 @@
 import pytest
-from django.utils import timezone
-from core.models import Document, DocumentCategory
+from core.models import Document
 
 
 @pytest.mark.django_db

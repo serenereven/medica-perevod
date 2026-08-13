@@ -14,9 +14,11 @@ ignore = [
     "E501",  # line too long (handled by formatter)
     "W293",
     "W292",
+    "W291",
     "I001",
 ]
 
 [lint.per-file-ignores]
 "*/migrations/*.py" = ["E501"]
 "*/tests/*.py" = ["S101"]  # allow assert in tests
+"*/apps.py" = ["F401"]
