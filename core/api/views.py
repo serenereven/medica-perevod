@@ -17,37 +17,32 @@ class DocumentViewSet(viewsets.ReadOnlyModelViewSet):
         queryset = Document.objects.filter(is_published=True)
         queryset = queryset.select_related("document_category")
         queryset = queryset.only(
-            "id", "title", "description", "document_type", "document_category",
-            "file_size", "download_count", "preview", "created_at",
+            "id",
+            "title",
+            "description",
+            "document_type",
+            "document_category",
+            "file_size",
+            "download_count",
+            "preview",
+            "created_at",
         )
         return queryset.order_by("title")
 
     @action(
         detail=True,
-        methods=['get'],
-        permission_classes=[permissions.IsAuthenticated]  # Только для авторизованных
+        methods=["get"],
+        permission_classes=[permissions.IsAuthenticated],  # Только для авторизованных
     )
     def download(self, request, pk=None):
         try:
             doc = self.get_queryset().get(pk=pk)
         except Document.DoesNotExist:
-            return Response(
-                {"detail": "Документ не найден"},
-                status=status.HTTP_404_NOT_FOUND
-            )
+            return Response({"detail": "Документ не найден"}, status=status.HTTP_404_NOT_FOUND)
 
         if not doc.file:
-            return Response(
-                {"detail": "Файл отсутствует"},
-                status=status.HTTP_404_NOT_FOUND
-            )
+            return Response({"detail": "Файл отсутствует"}, status=status.HTTP_404_NOT_FOUND)
 
-        Document.objects.filter(pk=doc.pk).update(
-            download_count=F("download_count") + 1
-        )
+        Document.objects.filter(pk=doc.pk).update(download_count=F("download_count") + 1)
 
-        return FileResponse(
-            doc.file.open("rb"),
-            as_attachment=True,
-            filename=doc.file.name.split("/")[-1]
-        )
+        return FileResponse(doc.file.open("rb"), as_attachment=True, filename=doc.file.name.split("/")[-1])

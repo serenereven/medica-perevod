@@ -170,8 +170,8 @@ AUTHENTICATION_BACKENDS = (
     "allauth.account.auth_backends.AuthenticationBackend",
 )
 
-LOGIN_REDIRECT_URL = 'core:documents_page'
-LOGOUT_REDIRECT_URL = 'core:documents_page'
+LOGIN_REDIRECT_URL = "core:documents_page"
+LOGOUT_REDIRECT_URL = "core:documents_page"
 
 ACCOUNT_USER_MODEL_USERNAME_FIELD = None
 # ACCOUNT_AUTHENTICATION_METHOD = "email"
