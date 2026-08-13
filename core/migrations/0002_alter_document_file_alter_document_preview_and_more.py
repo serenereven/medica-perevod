@@ -4,24 +4,23 @@ from django.db import migrations, models
 
 
 class Migration(migrations.Migration):
-
     dependencies = [
-        ('core', '0001_initial'),
+        ("core", "0001_initial"),
     ]
 
     operations = [
         migrations.AlterField(
-            model_name='document',
-            name='file',
-            field=models.FileField(upload_to='documents/', verbose_name='Документ'),
+            model_name="document",
+            name="file",
+            field=models.FileField(upload_to="documents/", verbose_name="Документ"),
         ),
         migrations.AlterField(
-            model_name='document',
-            name='preview',
-            field=models.ImageField(blank=True, null=True, upload_to='documents/preview/', verbose_name='Превью'),
+            model_name="document",
+            name="preview",
+            field=models.ImageField(blank=True, null=True, upload_to="documents/preview/", verbose_name="Превью"),
         ),
         migrations.AddConstraint(
-            model_name='document',
-            constraint=models.UniqueConstraint(fields=('file',), name='unique_document_file'),
+            model_name="document",
+            constraint=models.UniqueConstraint(fields=("file",), name="unique_document_file"),
         ),
     ]

@@ -1,6 +1,7 @@
 from django.urls import path
 from .views import documents_page, DocumentMetaView
 from django.views.generic import RedirectView
+
 app_name = "core"
 
 urlpatterns = [

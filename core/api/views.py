@@ -6,6 +6,7 @@ from .functions import ExtractLeadingText, ExtractFirstNumber
 from django.db.models.functions import Cast, Coalesce
 from django.db.models import IntegerField, Value
 
+
 class DocumentViewSet(viewsets.ReadOnlyModelViewSet):
     serializer_class = DocumentListSerializer
     pagination_class = PageNumberPagination
@@ -14,24 +15,25 @@ class DocumentViewSet(viewsets.ReadOnlyModelViewSet):
         queryset = Document.alive.all()
 
         # Подгружаем связанные сущности одним SQL-запросом через JOIN
-        queryset = queryset.select_related(
-            'document_category', 
-            'document_type'
-        )
+        queryset = queryset.select_related("document_category", "document_type")
 
         # Загружаем только те поля, которые требуются для сериализатора
         queryset = queryset.only(
-            'id', 'title', 'description', 'document_type', 'document_category',
-            'file_size', 'download_count', 'preview', 'created_at'
+            "id",
+            "title",
+            "description",
+            "document_type",
+            "document_category",
+            "file_size",
+            "download_count",
+            "preview",
+            "created_at",
         )
 
         # Если число отсутствует, Cast вернет NULL, который мы заменяем на 0
         queryset = queryset.annotate(
-            sort_text=ExtractLeadingText('title'),
-            sort_num=Coalesce(
-                Cast(ExtractFirstNumber('title'), IntegerField()), 
-                Value(0)
-            )
-        ).order_by('sort_text', 'sort_num')
+            sort_text=ExtractLeadingText("title"),
+            sort_num=Coalesce(Cast(ExtractFirstNumber("title"), IntegerField()), Value(0)),
+        ).order_by("sort_text", "sort_num")
 
         return queryset

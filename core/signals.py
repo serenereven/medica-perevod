@@ -6,6 +6,7 @@ from core.models import Document
 
 log = logging.getLogger(__name__)
 
+
 def _remove(field):
     if not field:
         return
@@ -16,15 +17,17 @@ def _remove(field):
     if os.path.isfile(path):
         try:
             os.remove(path)
-            log.info('Файл удалён с диска: %s', path)
+            log.info("Файл удалён с диска: %s", path)
         except OSError as exc:
-            log.warning('Не удалось удалить файл %s: %s', path, exc)
+            log.warning("Не удалось удалить файл %s: %s", path, exc)
+
 
 @receiver(post_delete, sender=Document)
 def delete_files_on_record_delete(sender, instance, **kwargs):
     """Удаляет файл и превью при удалении записи."""
     _remove(instance.file)
     _remove(instance.preview)
+
 
 @receiver(pre_save, sender=Document)
 def delete_old_file_on_replace(sender, instance, **kwargs):

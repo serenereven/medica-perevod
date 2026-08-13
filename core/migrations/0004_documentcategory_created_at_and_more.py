@@ -6,31 +6,37 @@ from django.db import migrations, models
 
 
 class Migration(migrations.Migration):
-
     dependencies = [
-        ('core', '0003_documentcategory_alter_document_document_category'),
+        ("core", "0003_documentcategory_alter_document_document_category"),
     ]
 
     operations = [
         migrations.AddField(
-            model_name='documentcategory',
-            name='created_at',
-            field=models.DateTimeField(auto_now_add=True, default=django.utils.timezone.now, verbose_name='Создано'),
+            model_name="documentcategory",
+            name="created_at",
+            field=models.DateTimeField(auto_now_add=True, default=django.utils.timezone.now, verbose_name="Создано"),
             preserve_default=False,
         ),
         migrations.AddField(
-            model_name='documentcategory',
-            name='updated_at',
-            field=models.DateTimeField(auto_now=True, verbose_name='Обновлено'),
+            model_name="documentcategory",
+            name="updated_at",
+            field=models.DateTimeField(auto_now=True, verbose_name="Обновлено"),
         ),
         migrations.AlterField(
-            model_name='document',
-            name='document_category',
-            field=models.ForeignKey(blank=True, null=True, on_delete=django.db.models.deletion.SET_NULL, related_name='documents', to='core.documentcategory', verbose_name='Категория документа'),
+            model_name="document",
+            name="document_category",
+            field=models.ForeignKey(
+                blank=True,
+                null=True,
+                on_delete=django.db.models.deletion.SET_NULL,
+                related_name="documents",
+                to="core.documentcategory",
+                verbose_name="Категория документа",
+            ),
         ),
         migrations.AlterField(
-            model_name='documentcategory',
-            name='id',
-            field=models.BigAutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID'),
+            model_name="documentcategory",
+            name="id",
+            field=models.BigAutoField(auto_created=True, primary_key=True, serialize=False, verbose_name="ID"),
         ),
     ]

@@ -14,3 +14,10 @@ python-dotenv==1.2.1
 sqlparse==0.5.5
 typing_extensions==4.15.0
 tzdata==2025.2
+
+pytest==8.0.0
+pytest-django==4.8.0
+pytest-cov==4.1.0
+
+# Linting
+ruff==0.3.0

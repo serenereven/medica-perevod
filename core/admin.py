@@ -5,10 +5,10 @@ from .models import Document, DocumentCategory
 
 @admin.register(DocumentCategory)
 class DocumentCategoryAdmin(TimeStampedAdminMixin, admin.ModelAdmin):
-    list_display = ['name']
-    list_display_links = ['name']
-    list_filter = ['name']
-    search_fields = ['name']
+    list_display = ["name"]
+    list_display_links = ["name"]
+    list_filter = ["name"]
+    search_fields = ["name"]
 
 
 @admin.register(Document)
@@ -40,20 +40,38 @@ class DocumentAdmin(TimeStampedAdminMixin, PublishableAdminMixin, SoftDeleteAdmi
     readonly_fields = ("file_size", "download_count", "created_at", "updated_at")
 
     fieldsets = (
-        ("Основное", {
-            "fields": ("title", "description", "file", "preview"),
-        }),
-        ("Классификация", {
-            "fields": ("document_category", "document_type"),
-        }),
-        ("Публикация", {
-            "fields": ("is_published",),
-        }),
-        ("Статистика", {
-            "fields": ("file_size", "download_count"),
-        }),
-        ("Служебное", {
-            "fields": ("created_at", "updated_at",),
-            "classes": ("collapse",),
-        }),
+        (
+            "Основное",
+            {
+                "fields": ("title", "description", "file", "preview"),
+            },
+        ),
+        (
+            "Классификация",
+            {
+                "fields": ("document_category", "document_type"),
+            },
+        ),
+        (
+            "Публикация",
+            {
+                "fields": ("is_published",),
+            },
+        ),
+        (
+            "Статистика",
+            {
+                "fields": ("file_size", "download_count"),
+            },
+        ),
+        (
+            "Служебное",
+            {
+                "fields": (
+                    "created_at",
+                    "updated_at",
+                ),
+                "classes": ("collapse",),
+            },
+        ),
     )

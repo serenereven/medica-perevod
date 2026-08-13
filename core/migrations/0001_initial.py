@@ -4,34 +4,65 @@ from django.db import migrations, models
 
 
 class Migration(migrations.Migration):
-
     initial = True
 
-    dependencies = [
-    ]
+    dependencies = []
 
     operations = [
         migrations.CreateModel(
-            name='Document',
+            name="Document",
             fields=[
-                ('id', models.BigAutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
-                ('created_at', models.DateTimeField(auto_now_add=True, verbose_name='Создано')),
-                ('updated_at', models.DateTimeField(auto_now=True, verbose_name='Обновлено')),
-                ('is_published', models.BooleanField(default=False, verbose_name='Опубликовано')),
-                ('published_at', models.DateTimeField(blank=True, db_index=True, null=True, verbose_name='Дата публикации')),
-                ('title', models.CharField(max_length=255, verbose_name='Название')),
-                ('description', models.TextField(blank=True, verbose_name='Описание')),
-                ('file', models.FileField(upload_to='documents/%Y-%m-%d/', verbose_name='Документ')),
-                ('preview', models.ImageField(blank=True, null=True, upload_to='documents/%Y-%m-%d/', verbose_name='Превью')),
-                ('document_type', models.CharField(choices=[('pdf', 'PDF документ'), ('word', 'Word документ'), ('excel', 'Excel таблица'), ('image', 'Изображение'), ('other', 'Другое')], default='other', max_length=20, verbose_name='Тип документа')),
-                ('document_category', models.CharField(choices=[('translate', 'Переводы'), ('other', 'Другое')], default='other', max_length=20, verbose_name='Категория документа')),
-                ('file_size', models.PositiveIntegerField(blank=True, editable=False, null=True, verbose_name='Размер файла (байты)')),
-                ('download_count', models.PositiveIntegerField(default=0, verbose_name='Количество скачиваний')),
+                ("id", models.BigAutoField(auto_created=True, primary_key=True, serialize=False, verbose_name="ID")),
+                ("created_at", models.DateTimeField(auto_now_add=True, verbose_name="Создано")),
+                ("updated_at", models.DateTimeField(auto_now=True, verbose_name="Обновлено")),
+                ("is_published", models.BooleanField(default=False, verbose_name="Опубликовано")),
+                (
+                    "published_at",
+                    models.DateTimeField(blank=True, db_index=True, null=True, verbose_name="Дата публикации"),
+                ),
+                ("title", models.CharField(max_length=255, verbose_name="Название")),
+                ("description", models.TextField(blank=True, verbose_name="Описание")),
+                ("file", models.FileField(upload_to="documents/%Y-%m-%d/", verbose_name="Документ")),
+                (
+                    "preview",
+                    models.ImageField(blank=True, null=True, upload_to="documents/%Y-%m-%d/", verbose_name="Превью"),
+                ),
+                (
+                    "document_type",
+                    models.CharField(
+                        choices=[
+                            ("pdf", "PDF документ"),
+                            ("word", "Word документ"),
+                            ("excel", "Excel таблица"),
+                            ("image", "Изображение"),
+                            ("other", "Другое"),
+                        ],
+                        default="other",
+                        max_length=20,
+                        verbose_name="Тип документа",
+                    ),
+                ),
+                (
+                    "document_category",
+                    models.CharField(
+                        choices=[("translate", "Переводы"), ("other", "Другое")],
+                        default="other",
+                        max_length=20,
+                        verbose_name="Категория документа",
+                    ),
+                ),
+                (
+                    "file_size",
+                    models.PositiveIntegerField(
+                        blank=True, editable=False, null=True, verbose_name="Размер файла (байты)"
+                    ),
+                ),
+                ("download_count", models.PositiveIntegerField(default=0, verbose_name="Количество скачиваний")),
             ],
             options={
-                'verbose_name': 'Документ',
-                'verbose_name_plural': 'Документы',
-                'ordering': ['-created_at'],
+                "verbose_name": "Документ",
+                "verbose_name_plural": "Документы",
+                "ordering": ["-created_at"],
             },
         ),
     ]

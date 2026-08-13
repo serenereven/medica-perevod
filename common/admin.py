@@ -3,13 +3,14 @@ from django.db import models
 from django.utils import timezone
 from ckeditor_uploader.widgets import CKEditorUploadingWidget
 
-admin.site.site_header = 'Администрирование сайта'
-admin.site.site_title = 'Админ-панель'
-admin.site.index_title = 'Добро пожаловать в панель управления'
+admin.site.site_header = "Администрирование сайта"
+admin.site.site_title = "Админ-панель"
+admin.site.index_title = "Добро пожаловать в панель управления"
 
 # ----------------------------
 # Filters
 # ----------------------------
+
 
 class DeletionStatusFilter(admin.SimpleListFilter):
     title = "Удаление"
@@ -36,6 +37,7 @@ class DeletionStatusFilter(admin.SimpleListFilter):
 # ----------------------------
 # Admin Mixins
 # ----------------------------
+
 
 class UUIDAdminMixin:
     """Показывает UUID id как readonly (если есть поле id)."""
@@ -126,17 +128,23 @@ class SoftDeleteAdminMixin:
         if "deleted_at" in field_names:
             actions.pop("soft_delete_selected", None)
 
-            actions.setdefault("restore_selected", (
-                self.restore_selected,
+            actions.setdefault(
                 "restore_selected",
-                self.restore_selected.short_description,
-            ))
+                (
+                    self.restore_selected,
+                    "restore_selected",
+                    self.restore_selected.short_description,
+                ),
+            )
 
-        actions.setdefault("hard_delete_selected", (
-            self.hard_delete_selected,
+        actions.setdefault(
             "hard_delete_selected",
-            self.hard_delete_selected.short_description,
-        ))
+            (
+                self.hard_delete_selected,
+                "hard_delete_selected",
+                self.hard_delete_selected.short_description,
+            ),
+        )
 
         return actions
 
@@ -176,6 +184,7 @@ class PublishableAdminMixin:
 # Готовый Admin для FullContentModel
 # ----------------------------
 
+
 class FullContentAdmin(
     UUIDAdminMixin,
     TimeStampedAdminMixin,
@@ -195,11 +204,11 @@ class FullContentAdmin(
     search_fields = ("title", "slug")
     list_display = ("title", "slug", "is_published", "published_at", "created_at")
     list_select_related = False
-    list_editable = ("is_published")
+    list_editable = "is_published"
     ordering = ("-created_at",)
 
     formfield_overrides = {
-        models.TextField: {'widget': CKEditorUploadingWidget},
+        models.TextField: {"widget": CKEditorUploadingWidget},
     }
 
     prepopulated_fields = {"slug": ("title",)}
@@ -246,9 +255,6 @@ class FullContentAdmin(
                 service_fields.append(name)
 
         if service_fields:
-            fieldsets.append((
-                "Служебное",
-                {"fields": service_fields, "classes": ("collapse",)}
-            ))
+            fieldsets.append(("Служебное", {"fields": service_fields, "classes": ("collapse",)}))
 
         return fieldsets

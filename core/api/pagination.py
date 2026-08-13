@@ -12,14 +12,16 @@ class StandardResultsSetPagination(PageNumberPagination):
         page_number = self.page.number
         from_item = (page_number - 1) * page_size + 1
         to_item = min(page_number * page_size, self.page.paginator.count)
-        return Response({
-            "count": self.page.paginator.count,
-            "from": from_item,
-            "to": to_item,
-            "next": self.get_next_link(),
-            "previous": self.get_previous_link(),
-            "results": data,
-        })
+        return Response(
+            {
+                "count": self.page.paginator.count,
+                "from": from_item,
+                "to": to_item,
+                "next": self.get_next_link(),
+                "previous": self.get_previous_link(),
+                "results": data,
+            }
+        )
 
     def get_paginated_response_schema(self, schema):
         return {

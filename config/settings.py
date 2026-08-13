@@ -3,8 +3,10 @@ from pathlib import Path
 
 BASE_DIR = Path(__file__).resolve().parent.parent
 
+
 def env(name: str, default=None):
     return os.environ.get(name, default)
+
 
 def env_bool(name: str, default: bool = False) -> bool:
     v = env(name)
@@ -24,16 +26,12 @@ INSTALLED_APPS = [
     "django.contrib.sessions",
     "django.contrib.messages",
     "django.contrib.staticfiles",
-
     "django.contrib.sites",
     "django.contrib.sitemaps",
-
     "common",
     "core.apps.CoreConfig",
     "users",
-
     "rest_framework",
-
     "allauth",
     "allauth.account",
     # "allauth.socialaccount",
@@ -47,7 +45,6 @@ MIDDLEWARE = [
     "django.contrib.auth.middleware.AuthenticationMiddleware",
     "django.contrib.messages.middleware.MessageMiddleware",
     "django.middleware.clickjacking.XFrameOptionsMiddleware",
-
     "allauth.account.middleware.AccountMiddleware",
 ]
 
@@ -94,21 +91,21 @@ DATABASES = {
 
 AUTH_PASSWORD_VALIDATORS = [
     {
-        'NAME': 'django.contrib.auth.password_validation.UserAttributeSimilarityValidator',
+        "NAME": "django.contrib.auth.password_validation.UserAttributeSimilarityValidator",
     },
     {
-        'NAME': 'django.contrib.auth.password_validation.MinimumLengthValidator',
+        "NAME": "django.contrib.auth.password_validation.MinimumLengthValidator",
     },
     {
-        'NAME': 'django.contrib.auth.password_validation.CommonPasswordValidator',
+        "NAME": "django.contrib.auth.password_validation.CommonPasswordValidator",
     },
     {
-        'NAME': 'django.contrib.auth.password_validation.NumericPasswordValidator',
+        "NAME": "django.contrib.auth.password_validation.NumericPasswordValidator",
     },
 ]
 
-LANGUAGE_CODE = 'ru-RU'
-TIME_ZONE = 'Europe/Moscow' 
+LANGUAGE_CODE = "ru-RU"
+TIME_ZONE = "Europe/Moscow"
 USE_I18N = True
 USE_L10N = True
 USE_TZ = True
@@ -136,21 +133,21 @@ CSRF_TRUSTED_ORIGINS = [h.strip() for h in env("DJANGO_CSRF_TRUSTED_ORIGINS", ""
 SITE_ID = 1
 
 # CKEDITOR
-CKEDITOR_UPLOAD_PATH = 'uploads/'
+CKEDITOR_UPLOAD_PATH = "uploads/"
 CKEDITOR_CONFIGS = {
-    'default': {
-        'toolbar': 'Minimal',
-        'toolbar_Minimal': [
-            ['Bold', 'Italic', 'Underline', 'Strike', 'Subscript', 'Superscript'],
-            {'name': 'links',       'items': ['Link']},
-            {'name': 'paragraph',   'items': ['NumberedList', 'BulletedList']},
-            {'name': 'insert',      'items': ['Table']},
-            {'name': 'raw',         'items': ['Source']},
+    "default": {
+        "toolbar": "Minimal",
+        "toolbar_Minimal": [
+            ["Bold", "Italic", "Underline", "Strike", "Subscript", "Superscript"],
+            {"name": "links", "items": ["Link"]},
+            {"name": "paragraph", "items": ["NumberedList", "BulletedList"]},
+            {"name": "insert", "items": ["Table"]},
+            {"name": "raw", "items": ["Source"]},
         ],
-        'height': 300,
-        'width': '100%',
-        'toolbarCanCollapse': False,
-        'removePlugins': 'image,flash,iframe,forms,smiley,about,elementspath,scayt,wsc,',
+        "height": 300,
+        "width": "100%",
+        "toolbarCanCollapse": False,
+        "removePlugins": "image,flash,iframe,forms,smiley,about,elementspath,scayt,wsc,",
         # если не хотите строгую фильтрацию, раскомментируйте:
         # 'allowedContent': True,
     }
@@ -194,7 +191,7 @@ ACCOUNT_RATE_LIMITS = {
 }
 
 # Разлогин через 7 дней
-SESSION_ENGINE = 'django.contrib.sessions.backends.db'
+SESSION_ENGINE = "django.contrib.sessions.backends.db"
 SESSION_COOKIE_AGE = 60 * 60 * 24 * 7
 SESSION_EXPIRE_AT_BROWSER_CLOSE = False
 # Обновлять срок сессии при активности:
@@ -206,8 +203,8 @@ AUTH_USER_MODEL = "users.User"
 # DEFAULT_FROM_EMAIL = "no-reply@localhost"
 
 # Email
-EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
-EMAIL_HOST = 'smtp.timeweb.ru' #'smtp.yandex.ru'
+EMAIL_BACKEND = "django.core.mail.backends.smtp.EmailBackend"
+EMAIL_HOST = "smtp.timeweb.ru"  #'smtp.yandex.ru'
 EMAIL_PORT = 465
 EMAIL_USE_SSL = True
 EMAIL_USE_TLS = False

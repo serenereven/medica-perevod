@@ -9,9 +9,9 @@ from common.sitemaps import sitemaps
 
 urlpatterns = [
     path("admin/", admin.site.urls),
-    path('ckeditor/', include('ckeditor_uploader.urls')),
-    path('', include(('core.urls', 'core'), namespace='core')),
-    path('api/', include("core.api.urls")),
+    path("ckeditor/", include("ckeditor_uploader.urls")),
+    path("", include(("core.urls", "core"), namespace="core")),
+    path("api/", include("core.api.urls")),
     # SEO files
     path("robots.txt", robots_txt, name="robots_txt"),
     path("sitemap.xml", sitemap, {"sitemaps": sitemaps}, name="django_sitemap"),
@@ -26,16 +26,10 @@ handler500 = "common.views.error_page"
 
 if settings.DEBUG:
     # Медиа файлы
-    urlpatterns += static(
-        settings.MEDIA_URL, 
-        document_root=settings.MEDIA_ROOT
-    )
-    
+    urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
+
     # Статические файлы
-    urlpatterns += static(
-        settings.STATIC_URL, 
-        document_root=settings.STATIC_ROOT
-    )
+    urlpatterns += static(settings.STATIC_URL, document_root=settings.STATIC_ROOT)
 
 if settings.DEBUG:
     urlpatterns += static(settings.STATIC_URL, document_root=settings.STATIC_ROOT)

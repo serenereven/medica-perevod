@@ -4,6 +4,7 @@ from core.models import Contact, BasicPage, ContactType
 CACHE_KEY = "core_base_data:v1"
 CACHE_TTL = 60 * 10  # 10 минут
 
+
 def base_data(request):
     data = cache.get(CACHE_KEY)
     if data:

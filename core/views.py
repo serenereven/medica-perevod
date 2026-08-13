@@ -14,7 +14,7 @@ class DocumentListView(generics.ListAPIView):
 
     def get_queryset(self):
         qs = Document.objects.published().for_list_view()
-        
+
         category = self.request.query_params.get("category")
         doc_type = self.request.query_params.get("type")
         q = self.request.query_params.get("q")
@@ -25,7 +25,7 @@ class DocumentListView(generics.ListAPIView):
             qs = qs.filter(document_type=doc_type)
         if q:
             qs = qs.filter(Q(title__icontains=q) | Q(description__icontains=q))
-            
+
         return qs
 
     def get_serializer_context(self):
@@ -57,19 +57,13 @@ class DocumentMetaView(APIView):
     def get(self, request):
         # Используем аннотацию для подсчета документов
         categories = DocumentCategory.objects.with_document_count()
-        
-        return Response({
-            "authenticated": request.user.is_authenticated,
-            "document_categories": [
-                {
-                    "value": str(c.pk), 
-                    "label": c.name,
-                    "count": c.documents_count
-                } 
-                for c in categories
-            ],
-            "document_types": [
-                {"value": value, "label": label}
-                for value, label in Document.DocumentType.choices
-            ],
-        })
+
+        return Response(
+            {
+                "authenticated": request.user.is_authenticated,
+                "document_categories": [
+                    {"value": str(c.pk), "label": c.name, "count": c.documents_count} for c in categories
+                ],
+                "document_types": [{"value": value, "label": label} for value, label in Document.DocumentType.choices],
+            }
+        )
