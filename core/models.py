@@ -62,7 +62,6 @@ class Document(TimeStampedModel, PublishableModel):
     )
 
     def save(self, *args, **kwargs):
-        creating = self.pk is None
         super().save(*args, **kwargs)  # сначала сохраняем, чтобы self.file.path существовал
 
         if not self.file:

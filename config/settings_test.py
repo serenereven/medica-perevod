@@ -1,4 +1,4 @@
-from config.settings import *
+from config.settings import * # noqa: F403
 
 DEBUG = True
 SECRET_KEY = 'test-secret-key-for-testing-only'

@@ -40,7 +40,7 @@ class DocumentDownloadView(APIView):
     def get(self, request, pk: int):
         try:
             doc = Document.objects.published().get(pk=pk)
-        except Document.DoesNotExist:
+        except Document.DoesNotExist as err:
             raise Http404("Document not found") from err
 
         if not doc.file:
