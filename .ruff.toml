@@ -20,5 +20,6 @@ ignore = [
 
 [lint.per-file-ignores]
 "*/migrations/*.py" = ["E501"]
-"*/tests/*.py" = ["S101"]  # allow assert in tests
+"*/tests/*.py" = ["S101"]
 "*/apps.py" = ["F401"]
+"config/*.py" = ["F403"]
